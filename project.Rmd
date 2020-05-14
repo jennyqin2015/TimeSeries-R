@@ -1,0 +1,112 @@
+---
+title: "project"
+author: "Jenny Qin"
+date: "4/9/2020"
+output: html_document
+---
+
+```{r}
+# extract stock historical price data for FB, AAPL, MSFT, TSLA, and AMZN
+suppressMessages(library(quantmod))
+suppressMessages(getSymbols("FB",from='2005-01-01',to='2020-04-03',src="yahoo"))
+suppressMessages(getSymbols("AAPL",from='2005-01-01',to='2020-04-03',src="yahoo"))
+suppressMessages(getSymbols("MSFT",from='2005-01-01',to='2020-04-03',src="yahoo"))
+suppressMessages(getSymbols("TSLA",from='2005-01-01',to='2020-04-03',src="yahoo"))
+suppressMessages(getSymbols("AMZN",from='2005-01-01',to='2020-04-03',src="yahoo"))
+
+```
+
+```{r}
+suppressMessages(getSymbols("CSCO",from='2005-01-01',to='2020-04-03',src="yahoo"))
+
+suppressMessages(getSymbols("GOOG",from='2005-01-01',to='2020-04-03',src="yahoo"))
+
+
+```
+
+
+
+```{r}
+head(FB)
+fb <- FB[,6]
+aapl <- AAPL[,6]
+msft <- MSFT[,6]
+tsla <- TSLA[,6]
+amzn <- AMZN[,6]
+csco <- CSCO[,6]
+goog <- GOOG[,6]
+```
+```{r}
+Box.test(logGOOG,lag=20,type='Ljung')
+```
+
+```{r}
+simplertn=dailyReturn(fb)
+hist(simplertn)
+
+
+logFB=dailyReturn(fb,type="log")
+logAAPL=dailyReturn(aapl,type="log")
+logMSFT=dailyReturn(msft,type="log")
+logTSLA=dailyReturn(tsla,type="log")
+logAMZN=dailyReturn(amzn,type="log")
+logCSCO=dailyReturn(csco,type="log")
+logGOOG=dailyReturn(goog,type="log")
+
+#par(mfcol=c(5,1))
+
+# histogram plots of stock price
+#hist(fb)
+#hist(logFB)
+hist(logAAPL)
+hist(logMSFT)
+#hist(logTSLA)
+hist(logAMZN)
+hist(logCSCO)
+hist(logGOOG)
+
+# histogram plots of stock price
+```
+
+```{r}
+#plot(logFB)
+plot(logAAPL)
+plot(logMSFT)
+#plot(logTSLA)
+plot(logAMZN)
+plot(logCSCO)
+plot(logGOOG)
+
+```
+```{r}
+var(logAAPL)
+var(logMSFT)
+var(logAMZN)
+var(logCSCO)
+var(logGOOG)
+```
+
+```{r}
+acf(logAAPL)
+#acf(logFB)
+acf(logMSFT)
+#acf(logTSLA)
+acf(logAMZN)
+acf(logCSCO)
+acf(logGOOG)
+acf(logAAPL^2)
+```
+
+```{r}
+da <- cbind(logCSCO,logAAPL,logMSFT, logGOOG,logAMZN)
+
+res <- cor(x)
+```
+
+```{r}
+install.packages("corrplot")
+library(corrplot)
+corrplot(res, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+```
+

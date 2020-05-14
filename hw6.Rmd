@@ -1,0 +1,48 @@
+---
+title: "HW6"
+author: "Jenny Qin"
+date: "4/3/2020"
+output: html_document
+---
+
+```{r}
+da <- read.table("m-unrateic.txt", header = T)
+head(da)
+dim(da)
+```
+```{r}
+unrate <- da$rate
+x <- da[,5:9]
+model1<-lm(unrate~icm1,data = x)
+summary(model1)
+par(mfcol=c(2,1))
+acf(model1$residuals,lag=36)
+pacf(model1$residuals,lag=36)
+```
+
+```{r}
+library(quantmod)
+getSymbols("SPY",from='2015-01-01',to='2019-12-31',src="yahoo")
+head(SPY)
+```
+
+```{r}
+da<- SPY[,6]
+logreturn <- dailyReturn(da,type = "log")
+par(mfcol=c(2,1))
+acf(logreturn, lag=12)
+acf(logreturn^2, lag=12)
+Box.test(logreturn, lag = 36, 'Ljung')
+Box.test(logreturn^2, lag = 36, 'Ljung')
+```
+```{r}
+library(fGarch)
+m1 = garchFit(~garch(5,0),data = logreturn,trace=F)
+m1
+m2 = garchFit(~garch(5,0),data = logreturn,trace=F, cond.dist = "std")
+m2
+summary(m1)
+summary(m2)
+```
+
+

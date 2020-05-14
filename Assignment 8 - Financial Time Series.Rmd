@@ -1,0 +1,43 @@
+---
+title: "Assignment 8 - Financial Time Series"
+author: "Hailong Zeng, Qian Liu, Sifan Du, Zhengyi Qin"
+date: "April 17, 2020"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+header-includes:
+  - \newcommand\be{\begin{enumerate}}
+  - \newcommand\ee{\end{enumerate}}
+---
+
+## Problem 1
+Tsay's book. 7.1 (a), (b), (c). For (b) and (c), start with ARMA+GARCH model being an AR(2)+GARCH(1,1) then check if AR components are significant, and if GARCH(1,1) is adequate.\newline
+Question7.1\newline
+Consider the daily returns of GE stock from January 2, 1998, to December 31, 2008. The data can be obtained from CRSP or the file d-ge9808.txt. Convert the simple returns into log returns. Suppose that you hold a long position on the stock valued at $1 million. Use the tail probability 0.01. Compute the value at risk of your position for 1-day horizon and 15-day horizon using the following methods:
+
+```{r, message=FALSE, warning=FALSE}
+data = read.table("d-ge9808.txt",header=T)
+ge = -log(data$ge+1) # log return
+```
+
+\be
+\item[a] The RiskMetrics method.
+```{r}
+source("Igarch.R")
+m1=Igarch(ge,include.mean=F,volcnt=F)
+vt = 0.9604*(m1$volatility[2767])^2+(1-0.9604)*(ge[2767])^2
+VaR1 = qnorm(1-0.01)*sqrt(vt)
+paste('VaR for 1-day =', VaR1)
+VaR15 = sqrt(15)*VaR1
+paste('VaR for 15-day =', VaR15)
+```
+
+The value at risk of position for 1-day horizon in dollar amount is 1000000$\times$0.11577=115770. And the value at risk of position for 15-day horizon in dollar amount is 1000000$\times$0.4482=448200.
+
+
+
+
+
+
+

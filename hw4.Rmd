@@ -1,0 +1,62 @@
+---
+title: "Hw3"
+author: "Jenny Qin"
+date: "2/21/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(quantmod)
+
+#3.
+getSymbols("^VIX",from='2015-01-01',to='2020-02-01',src="yahoo")
+r<-monthlyReturn(VIX)
+m1<-ar(r)
+acf(r)
+plot(m1.residuals)
+
+```
+
+```{r}
+#4
+da <- read.table("m-unrate.txt",header=TRUE)
+par(mfcol=c(2,2))
+
+x<- da[,4]
+x1<-x[1:753]
+acf(x,lag=12)
+x2<-x[2:754]
+y <- x2-x1
+y<-y[-length(y)]
+acf(y,lag=12)
+
+Box.test(x,lag=10,"Ljung")
+
+# use AR, use maximum likelihood function to find AR model
+
+# use ARIMA functionn to fit AR(p) model
+
+m1= ar(y, method="mle")
+plot(m1$resid,type="l")
+# Call:
+#   ar(x = y, method = "mle")
+# 
+# Coefficients:
+#   1        2        3        4        5        6        7        8        9  
+# 0.0114   0.2208   0.1536   0.1030   0.1319   0.0007  -0.0333   0.0047  -0.0056  
+# 10       11       12  
+# -0.1032   0.0302  -0.1174  
+# 
+# Order selected 12  sigma^2 estimated as  0.03838
+
+# use ARIMA functionn to fit AR(p) model
+m2<-arima(y, order=c(12,0,0))
+plot(m2$resid,type="l")
+
+```
+
+
